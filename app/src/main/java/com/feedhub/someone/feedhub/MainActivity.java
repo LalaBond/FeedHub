@@ -9,6 +9,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.prof.rssparser.Article;
+import com.prof.rssparser.Parser;
+
+import java.util.ArrayList;
+
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -24,6 +30,28 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+
+
+        //url of RSS feed
+        String urlString = "http://www.androidcentral.com/feed";
+        Parser parser = new Parser();
+        parser.execute(urlString);
+        parser.onFinish(new Parser.OnTaskCompleted() {
+
+            @Override
+            public void onTaskCompleted(ArrayList<Article> list) {
+                //what to do when the parsing is done
+                //the Array List contains all article's data. For example you can use it for your adapter.
+
+                CustomAdapter adapter = new CustomAdapter(this, list);
+
+            }
+
+            @Override
+            public void onError() {
+                //what to do in case of error
             }
         });
     }
