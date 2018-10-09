@@ -28,4 +28,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     compile 'com.prof.rssparser:rssparser:1.4.4'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
