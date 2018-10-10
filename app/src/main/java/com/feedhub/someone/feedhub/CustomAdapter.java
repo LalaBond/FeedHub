@@ -1,17 +1,21 @@
 package com.feedhub.someone.feedhub;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.prof.rssparser.Article;
 import com.prof.rssparser.Parser;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -22,6 +26,7 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     private Context context;
     private ArrayList<Article> list;
+    private String image;
 
 
     public CustomAdapter(Context context, ArrayList<Article> list) {
@@ -40,8 +45,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
     @Override
     public void onBindViewHolder(CustomAdapter.ViewHolder holder, int position) {
 
-        String image = list.get(position).getImage();
+        image = list.get(position).getImage();
         Picasso.with(context).load(image).into(holder.imageView);
+        holder.imageView.setTag(position);
+
+        holder.titleTV.setText(list.get(position).getTitle());
 
     }
 
@@ -53,14 +61,29 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        public String title, author, link, date, description, content, image;
+
 
         ImageView imageView;
+        TextView titleTV;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
             imageView = itemView.findViewById(R.id.articleImageView);
+            titleTV = itemView.findViewById(R.id.titleTV);
+
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    Intent moviePreview = new Intent(context, ArticleDetailActivity.class);
+
+                    moviePreview.putExtra("article", (Parcelable) list.get(getAdapterPosition()));
+                    context.startActivity(moviePreview);
+
+                }
+            });
 
         }
     }

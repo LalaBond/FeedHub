@@ -6,13 +6,11 @@ package com.feedhub.someone.feedhub;
 
 public class Helper {
 
-    public Helper(){}
-
-//    public void ActionWrapper(Action action){
-//
+//    public final HelperMethod(){
 //
 //
 //
 //    }
+
 
 }
