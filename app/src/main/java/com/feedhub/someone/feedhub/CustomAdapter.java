@@ -11,10 +11,12 @@ import android.widget.Adapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.feedhub.someone.feedhub.model.ArticleSerializableModel;
 import com.prof.rssparser.Article;
 import com.prof.rssparser.Parser;
 import com.squareup.picasso.Picasso;
 
+import java.io.Externalizable;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -22,7 +24,7 @@ import java.util.ArrayList;
  * Created by someone on 10/4/18.
  */
 
-public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder>{
+public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder> implements Serializable{
 
     private Context context;
     private ArrayList<Article> list;
@@ -79,7 +81,9 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
                 public void onClick(View view) {
                     Intent moviePreview = new Intent(context, ArticleDetailActivity.class);
 
-                    moviePreview.putExtra("article", (Parcelable) list.get(getAdapterPosition()));
+
+                    ArticleSerializableModel article = Helper.ArticleToArticleSerializableModelConverter(list.get(getAdapterPosition()));
+                    moviePreview.putExtra("article", (Serializable) article);
                     context.startActivity(moviePreview);
 
                 }

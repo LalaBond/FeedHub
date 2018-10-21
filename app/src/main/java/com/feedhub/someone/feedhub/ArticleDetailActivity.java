@@ -7,8 +7,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.feedhub.someone.feedhub.model.ArticleSerializableModel;
+import com.google.gson.Gson;
 import com.prof.rssparser.Article;
+import com.squareup.picasso.Picasso;
 
 
 /**
@@ -17,7 +23,11 @@ import com.prof.rssparser.Article;
 public class ArticleDetailActivity extends AppCompatActivity {
 
     private String title, author, link, date, description, content;
-    private Article article;
+    private String articleString;
+    private ArticleSerializableModel article;
+    private TextView descriptionTV, authorTV, publicationDateTV;
+    private ImageView imageView;
+    private WebView webview;
 
 
 
@@ -39,8 +49,26 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
 
         Intent intent = getIntent();
+        article = (ArticleSerializableModel) intent.getSerializableExtra("article");
 
-        article = intent.getParcelableExtra("article");
+        SetupLayout();
+        SetContent();
+
+    }
+
+    private void SetContent() {
+//
+//        Picasso.with(this).load(article.getImage()).into(imageView);
+//        descriptionTV.setText(article.getDescription());
+        webview.loadUrl(article.getLink());
+    }
+
+    private void SetupLayout() {
+
+//        imageView = findViewById(R.id.imageView);
+//        descriptionTV = findViewById(R.id.description);
+        webview = findViewById(R.id.webview);
+
     }
 
 }

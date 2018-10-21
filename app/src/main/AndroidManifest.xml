@@ -24,7 +24,17 @@
         <activity
             android:name=".ArticleDetailActivity"
             android:label="@string/title_activity_article_detail"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <receiver android:name=".FeedHubAppWidget">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/feed_hub_app_widget_info" />
+        </receiver>
     </application>
 
 </manifest>

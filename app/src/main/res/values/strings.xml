@@ -2,4 +2,6 @@
     <string name="app_name">FeedHub</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_article_detail">ArticleDetailActivity</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>
