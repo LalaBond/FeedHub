@@ -22,6 +22,17 @@
 
     <include layout="@layout/content_article_detail" />
 
+    <ImageButton
+        android:id="@+id/favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="?attr/actionBarSize"
+        app:srcCompat="@drawable/unliked"
+        android:clickable="true"
+        android:onClick="favoriteArticle"
+        />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

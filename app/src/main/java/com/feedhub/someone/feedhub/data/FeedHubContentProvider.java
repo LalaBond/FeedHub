@@ -76,6 +76,7 @@ public class FeedHubContentProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
+
         final SQLiteDatabase database = dbHelper.getWritableDatabase();
 
         Uri returnUri;

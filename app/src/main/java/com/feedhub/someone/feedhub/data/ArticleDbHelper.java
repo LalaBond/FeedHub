@@ -27,11 +27,11 @@ public class ArticleDbHelper  extends SQLiteOpenHelper {
                 "CREATE TABLE " + FavoriteNewsContract.FavoriteNewsEntry.TABLE_NAME + " (" +
 
                         //FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                        FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_ID + " INTEGER PRIMARY KEY, " +
+                        FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_ID + " TEXT PRIMARY KEY, " +
                         FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_TITLE + " TEXT NOT NULL, " +
                         FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_DATE + " TEXT NOT NULL, " +
                         FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_DESCRIPTION + " TEXT NOT NULL, " +
-                        FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_POSTER + " TEXT NOT NULL " + ");";
+                        FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_LINK + " TEXT NOT NULL " + ");";
 
         sqLiteDatabase.execSQL(SQL_CREATE_NEWSFAVORITES_TABLE);
 

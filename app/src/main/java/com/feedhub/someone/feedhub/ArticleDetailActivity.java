@@ -1,6 +1,9 @@
 package com.feedhub.someone.feedhub;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,9 +13,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.feedhub.someone.feedhub.data.FavoriteNewsContract;
 import com.feedhub.someone.feedhub.model.ArticleSerializableModel;
 import com.google.gson.Gson;
 import com.prof.rssparser.Article;
@@ -30,6 +36,8 @@ public class ArticleDetailActivity extends AppCompatActivity {
     private TextView descriptionTV, authorTV, publicationDateTV;
     private ImageView imageView;
     private WebView webview;
+    private ImageButton favoriteButton;
+    private boolean isFavorite = false;
 
 
 
@@ -61,10 +69,27 @@ public class ArticleDetailActivity extends AppCompatActivity {
         });
 
 
-
         SetupLayout();
         SetContent();
 
+        Cursor queryResults = getContentResolver().query(FavoriteNewsContract.FavoriteNewsEntry.CONTENT_URI, null, null, null, null);
+
+        int movieIndex = queryResults.getColumnIndex(FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_LINK);
+        int results = queryResults.getCount();
+
+        for (int i = 0; i < results; i++) {
+
+            queryResults.moveToPosition(i);
+
+            String x = queryResults.getString(movieIndex);
+            if (article.getLink().equals(x)) {
+                //movie is a favorite
+
+                favoriteButton.setImageResource(R.drawable.liked);
+                isFavorite = true;
+            }
+
+        }
     }
 
     private void SetContent() {
@@ -76,9 +101,8 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
     private void SetupLayout() {
 
-//        imageView = findViewById(R.id.imageView);
-//        descriptionTV = findViewById(R.id.description);
         webview = findViewById(R.id.webview);
+        favoriteButton = findViewById(R.id.favorite);
 
     }
 
@@ -104,4 +128,50 @@ public class ArticleDetailActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void favoriteArticle(View view) {
+
+        try {
+
+            if(isFavorite){
+                Uri uri = FavoriteNewsContract.FavoriteNewsEntry.CONTENT_URI;
+
+                String id = article.getTitle() + article.getPubDate().toString();
+                uri = uri.buildUpon().appendPath(id).build();
+
+                //delete row
+                int rowsDeleted = getContentResolver().delete(uri, null, null);
+
+                Toast toast = Toast.makeText(this, article.getTitle() + " has been deleted from favorites", Toast.LENGTH_LONG);
+                toast.show();
+
+                favoriteButton.setImageResource(R.drawable.unliked);
+                isFavorite = false;
+
+            }
+            else {
+                ContentValues values = new ContentValues();
+
+                values.put(FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_ID,  (article.getTitle() + article.getPubDate().toString()).replaceAll(" ", ""));
+                values.put(FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_TITLE, article.getTitle());
+                values.put(FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_DATE, article.getPubDate().toString());
+                values.put(FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_DESCRIPTION, article.getDescription());
+                values.put(FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_LINK, article.getLink());
+
+
+
+            /*Inserting data using the content provider*/
+                Uri uri = getContentResolver().insert(FavoriteNewsContract.FavoriteNewsEntry.CONTENT_URI, values);
+
+                Toast toast = Toast.makeText(this, article.getTitle() + " has been added to favorites", Toast.LENGTH_LONG);
+                toast.show();
+
+                favoriteButton.setImageResource(R.drawable.liked);
+                isFavorite = true;
+            }
+
+        } catch(Exception e) {
+
+            System.out.println("$LALA: " + e);
+        }
+    }
 }

@@ -35,6 +35,11 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/feed_hub_app_widget_info" />
         </receiver>
+
+        <provider
+            android:authorities="com.feedhub.someone.feedhub"
+            android:name="com.feedhub.someone.feedhub.data.FeedHubContentProvider"
+            android:exported="false"/>
     </application>
 
 </manifest>

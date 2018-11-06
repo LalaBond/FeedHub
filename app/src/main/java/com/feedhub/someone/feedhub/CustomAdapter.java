@@ -63,8 +63,6 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-
-
         ImageView imageView;
         TextView titleTV;
 
@@ -74,13 +72,11 @@ public class CustomAdapter extends RecyclerView.Adapter<CustomAdapter.ViewHolder
             imageView = itemView.findViewById(R.id.articleImageView);
             titleTV = itemView.findViewById(R.id.titleTV);
 
-
             imageView.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
                     Intent moviePreview = new Intent(context, ArticleDetailActivity.class);
-
 
                     ArticleSerializableModel article = Helper.ArticleToArticleSerializableModelConverter(list.get(getAdapterPosition()));
                     moviePreview.putExtra("article", (Serializable) article);
