@@ -7,20 +7,22 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 
+//import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.analytics.Tracker;
 import com.prof.rssparser.Article;
 import com.prof.rssparser.Parser;
 
 import java.util.ArrayList;
-
 
 public class MainActivity extends AppCompatActivity {
 
     public Context context;
     public RecyclerView recyclerView;
     public static LinearLayoutManager layoutManager;
+    private Tracker mTracker;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +30,11 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         context = this;
+
+        // Obtain the shared Tracker instance.
+        AnalyticsApplication application = (AnalyticsApplication) getApplication();
+        mTracker = application.getDefaultTracker();
+        //MobileAds.initialize(this, "YOUR_ADMOB_APP_ID");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -57,7 +64,11 @@ public class MainActivity extends AppCompatActivity {
                 //what to do when the parsing is done
                 //the Array List contains all article's data. For example you can use it for your adapter.
 
-               // JAXBContext j;
+                mTracker.send(new HitBuilders.EventBuilder()
+                        .setCategory("Task")
+                        .setAction("Completed RSS Task")
+                        .build());
+
                 CustomAdapter adapter = new CustomAdapter(context, list);
                 recyclerView.setLayoutManager(layoutManager);
                 recyclerView.setAdapter(adapter);
@@ -72,7 +83,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Log.i("INFO", "Setting screen name: " + "MainActivity");
+        mTracker.setScreenName("Image~" + "MainActivity");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+
+    //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
 //        getMenuInflater().inflate(R.menu.menu_main, menu);
