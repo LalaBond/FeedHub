@@ -12,11 +12,6 @@ import java.util.List;
 
 public class Helper {
 
-//    public final HelperMethod(){
-//
-//
-//
-//    }
 public static ArticleSerializableModel ArticleToArticleSerializableModelConverter(Article article){
         ArticleSerializableModel articleSerializableList = new ArticleSerializableModel();
 

@@ -9,6 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 //import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 import com.prof.rssparser.Article;
@@ -22,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public RecyclerView recyclerView;
     public static LinearLayoutManager layoutManager;
     private Tracker mTracker;
+    private AdView mAdView;
 
 
     @Override
@@ -34,7 +38,11 @@ public class MainActivity extends AppCompatActivity {
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
         mTracker = application.getDefaultTracker();
-        //MobileAds.initialize(this, "YOUR_ADMOB_APP_ID");
+        MobileAds.initialize(this, "ca-app-pub-3533473961105694~3720970661");
+
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
