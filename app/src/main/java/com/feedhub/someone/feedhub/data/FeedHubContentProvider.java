@@ -41,7 +41,6 @@ public class FeedHubContentProvider extends ContentProvider {
         Context context = getContext();
         dbHelper = new ArticleDbHelper(context);
 
-
         return true;
     }
 

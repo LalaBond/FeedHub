@@ -30,6 +30,6 @@ public class FavoriteNewsContract {
         public static final String COLUMN_ARTICLE_DATE = "article_date";
         public static final String COLUMN_ARTICLE_DESCRIPTION = "article_description";
         public static final String COLUMN_ARTICLE_LINK = "article_link";
-        //public static final String COLUMN_ARTICLE_POSTER = "article_poster";
+        public static final String COLUMN_ARTICLE_IMAGE = "article_image";
     }
 }

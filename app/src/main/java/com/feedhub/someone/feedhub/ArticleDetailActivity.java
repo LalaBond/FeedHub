@@ -156,6 +156,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
                 values.put(FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_DATE, article.getPubDate().toString());
                 values.put(FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_DESCRIPTION, article.getDescription());
                 values.put(FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_LINK, article.getLink());
+                values.put(FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_IMAGE, article.getImage());
 
 
 
