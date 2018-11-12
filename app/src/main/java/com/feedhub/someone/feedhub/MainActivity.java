@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     public static LinearLayoutManager layoutManager;
     private Tracker mTracker;
     private AdView mAdView;
+    private static int position = 0;
 
 
     @Override
@@ -33,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         context = this;
+
+
 
         // Obtain the shared Tracker instance.
         AnalyticsApplication application = (AnalyticsApplication) getApplication();
@@ -48,6 +51,12 @@ public class MainActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(this);
+
+        if (savedInstanceState != null ){
+            position =  savedInstanceState.getInt("position");
+            layoutManager.scrollToPosition(position);
+        }
+
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +106,15 @@ public class MainActivity extends AppCompatActivity {
         Log.i("INFO", "Setting screen name: " + "MainActivity");
         mTracker.setScreenName("Image~" + "MainActivity");
         mTracker.send(new HitBuilders.ScreenViewBuilder().build());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        position = layoutManager.findFirstVisibleItemPosition();
+
+        outState.putInt("position", position);
     }
 
 
