@@ -4,4 +4,6 @@
     <string name="title_activity_article_detail">ArticleDetailActivity</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="icon_preview">Icon preview</string>
+    <string name="image_preview">Image preview</string>
 </resources>

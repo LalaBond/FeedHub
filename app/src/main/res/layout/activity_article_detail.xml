@@ -30,6 +30,8 @@
         android:layout_marginTop="?attr/actionBarSize"
         app:srcCompat="@drawable/unliked"
         android:clickable="true"
+        android:focusable="true"
+        android:contentDescription="@string/icon_preview"
         android:onClick="favoriteArticle"
         />
 

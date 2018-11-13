@@ -1,7 +1,10 @@
 package com.feedhub.someone.feedhub;
 
+import  android.support.v4.app.LoaderManager;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,15 +24,13 @@ import android.widget.Toast;
 
 import com.feedhub.someone.feedhub.data.FavoriteNewsContract;
 import com.feedhub.someone.feedhub.model.ArticleSerializableModel;
-import com.google.gson.Gson;
-import com.prof.rssparser.Article;
-import com.squareup.picasso.Picasso;
+
 
 
 /**
  * Created by someone on 10/9/18.
  */
-public class ArticleDetailActivity extends AppCompatActivity {
+public class ArticleDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
     private String title, author, link, date, description, content;
     private String articleString;
@@ -38,6 +40,9 @@ public class ArticleDetailActivity extends AppCompatActivity {
     private WebView webview;
     private ImageButton favoriteButton;
     private boolean isFavorite = false;
+    private static final int DATA_LOADER = 22;
+
+
 
 
 
@@ -72,30 +77,29 @@ public class ArticleDetailActivity extends AppCompatActivity {
         SetupLayout();
         SetContent();
 
-        Cursor queryResults = getContentResolver().query(FavoriteNewsContract.FavoriteNewsEntry.CONTENT_URI, null, null, null, null);
+        //Cursor queryResults = getContentResolver().query(FavoriteNewsContract.FavoriteNewsEntry.CONTENT_URI, null, null, null, null);
 
-        int movieIndex = queryResults.getColumnIndex(FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_LINK);
-        int results = queryResults.getCount();
+        Bundle queryBundle = new Bundle();
+        queryBundle.putString("QUERY", String.valueOf(FavoriteNewsContract.FavoriteNewsEntry.CONTENT_URI));
 
-        for (int i = 0; i < results; i++) {
+        LoaderManager loaderManager = getSupportLoaderManager();
+        Loader<Cursor> dataLoader = loaderManager.getLoader(DATA_LOADER);
 
-            queryResults.moveToPosition(i);
+        if(dataLoader == null){
 
-            String x = queryResults.getString(movieIndex);
-            if (article.getLink().equals(x)) {
-                //movie is a favorite
-
-                favoriteButton.setImageResource(R.drawable.liked);
-                isFavorite = true;
-            }
+            loaderManager.initLoader(DATA_LOADER, queryBundle, this);
 
         }
+        else {
+            loaderManager.restartLoader(DATA_LOADER, queryBundle,  this);
+        }
+
+
+
     }
 
     private void SetContent() {
-//
-//        Picasso.with(this).load(article.getImage()).into(imageView);
-//        descriptionTV.setText(article.getDescription());
+
         webview.loadUrl(article.getLink());
     }
 
@@ -174,5 +178,68 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
             System.out.println("$LALA: " + e);
         }
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int i, final Bundle args) {
+        return new AsyncTaskLoader<Cursor>(this) {
+
+            @Override
+            protected void onStartLoading() {
+                super.onStartLoading();
+
+                if(args == null){
+                    return;
+                }
+            }
+
+            @Override
+            public Cursor loadInBackground() {
+                String query = args.getString("QUERY");
+                Cursor queryResults = null;
+
+                try {
+
+                    queryResults = getContentResolver().query(Uri.parse(query), null, null, null, null);
+                } catch(Exception e){
+
+                    Log.e("Error", e.toString());
+                }
+
+                return queryResults;
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor queryResults) {
+
+        int articleIndex = queryResults.getColumnIndex(FavoriteNewsContract.FavoriteNewsEntry.COLUMN_ARTICLE_LINK);
+        int results = queryResults.getCount();
+
+        for (int i = 0; i < results; i++) {
+
+            queryResults.moveToPosition(i);
+
+            String x = queryResults.getString(articleIndex);
+            if (article.getLink().equals(x)) {
+                //movie is a favorite
+                 runOnUiThread(new Runnable() {
+                     @Override
+                     public void run() {
+                         favoriteButton.setImageResource(R.drawable.liked);
+                     }
+                 });
+                isFavorite = true;
+            }
+
+        }
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+        Log.d("Loader Reset", "resetting loader");
     }
 }

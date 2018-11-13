@@ -150,13 +150,13 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_listitem);
         try {
 
-            Bitmap bitmap = Picasso.with(context).load(body.get(position).getImage()).get();
+            Bitmap bitmap = Picasso.with(context).load(body.get(i).getImage()).get();
             rv.setImageViewBitmap(R.id.articleImageView, bitmap);
         } catch (IOException e) {
             e.printStackTrace();
             Log.e("Error", "Error adding bitmap");
         }
-        rv.setTextViewText(R.id.titleTV, body.get(position).getTitle());
+        rv.setTextViewText(R.id.titleTV, body.get(i).getTitle());
 
 
         return rv;

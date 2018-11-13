@@ -8,7 +8,8 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:id="@+id/articleImageView" />
+        android:id="@+id/articleImageView"
+        android:contentDescription="@string/image_preview"/>
 
     <TextView
         android:layout_width="match_parent"
