@@ -4,9 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
+
 import com.feedhub.someone.feedhub.MainActivity;
 import com.feedhub.someone.feedhub.R;
 import com.feedhub.someone.feedhub.data.FavoriteNewsContract;
@@ -51,7 +53,7 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
         context = applicationContext;
         this.position = position;
 
-        body = GetFavoriteArticles();
+        GetFavoriteArticles();
 
     }
 
@@ -84,7 +86,7 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 //            articleModel[i].setPubDate(queryResults.getString(articleDate));
 //            articleModel[i].setVote_average(Double.parseDouble(queryResults.getString(movieRating)));
 //            articleModel[i].setOverview(queryResults.getString(movieDescription));
-            articleModel[i].setImage(queryResults.getString(articleLink));
+            articleModel[i].setLink(queryResults.getString(articleLink));
             articleModel[i].setImage(queryResults.getString(articleImage));
 
 
@@ -105,9 +107,11 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
 
         try {
 
-            /*fetching data from db and returning*/
-            Cursor cursor = context.getContentResolver().query(FavoriteNewsContract.FavoriteNewsEntry.CONTENT_URI, null, null, null, null);
-            body = parseToArticleObject(cursor);
+            /*fetching data from db with AsyncTask*/
+
+            new LoadWidgetDataTask().execute().get();
+            //Cursor cursor = context.getContentResolver().query(FavoriteNewsContract.FavoriteNewsEntry.CONTENT_URI, null, null, null, null);
+            //body = parseToArticleObject(cursor);
 
             return body;
 
@@ -149,9 +153,9 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
         //setting up articles list item
         RemoteViews rv = new RemoteViews(context.getPackageName(), R.layout.widget_listitem);
         try {
-
             Bitmap bitmap = Picasso.with(context).load(body.get(i).getImage()).get();
             rv.setImageViewBitmap(R.id.articleImageView, bitmap);
+
         } catch (IOException e) {
             e.printStackTrace();
             Log.e("Error", "Error adding bitmap");
@@ -181,5 +185,22 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory{
     @Override
     public boolean hasStableIds() {
         return true;
+    }
+
+    private class LoadWidgetDataTask extends AsyncTask<Cursor, Void, Cursor>{
+
+        @Override
+        protected Cursor doInBackground(Cursor... cursors) {
+
+            Cursor cursor = context.getContentResolver().query(FavoriteNewsContract.FavoriteNewsEntry.CONTENT_URI, null, null, null, null);
+            return cursor;
+        }
+
+        @Override
+        protected void onPostExecute(Cursor s) {
+            super.onPostExecute(s);
+            body = parseToArticleObject(s);
+
+        }
     }
 }

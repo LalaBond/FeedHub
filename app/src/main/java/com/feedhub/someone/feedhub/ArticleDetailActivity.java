@@ -18,8 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebView;
 import android.widget.ImageButton;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.feedhub.someone.feedhub.data.FavoriteNewsContract;
@@ -32,11 +30,7 @@ import com.feedhub.someone.feedhub.model.ArticleSerializableModel;
  */
 public class ArticleDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor> {
 
-    private String title, author, link, date, description, content;
-    private String articleString;
     private ArticleSerializableModel article;
-    private TextView descriptionTV, authorTV, publicationDateTV;
-    private ImageView imageView;
     private WebView webview;
     private ImageButton favoriteButton;
     private boolean isFavorite = false;
@@ -50,7 +44,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_detail);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
 
         Intent intent = getIntent();
         article = (ArticleSerializableModel) intent.getSerializableExtra("article");
@@ -61,8 +55,8 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
 
                 Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
                 sharingIntent.setType("text/plain");
@@ -87,7 +81,7 @@ public class ArticleDetailActivity extends AppCompatActivity implements LoaderMa
 
         if(dataLoader == null){
 
-            loaderManager.initLoader(DATA_LOADER, queryBundle, this);
+            loaderManager.initLoader(DATA_LOADER, queryBundle, this).forceLoad();
 
         }
         else {
